@@ -1,0 +1,52 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - compliance.datumapis.com
+  resources:
+  - vendors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - compliance.datumapis.com
+  resources:
+  - vendors/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - compliance.datumapis.com
+  resources:
+  - vendors/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - compliance.datumapis.com
+  resources:
+  - subprocessors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - compliance.datumapis.com
+  resources:
+  - subprocessors/status
+  verbs:
+  - get
+  - patch
+  - update

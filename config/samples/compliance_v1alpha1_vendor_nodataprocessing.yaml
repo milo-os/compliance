@@ -1,0 +1,11 @@
+apiVersion: compliance.datumapis.com/v1alpha1
+kind: Vendor
+metadata:
+  name: hashicorp-terraform
+spec:
+  displayName: HashiCorp Terraform
+  legalEntity: HashiCorp, Inc.
+  countryOfIncorporation: US
+  website: https://www.terraform.io
+  # No complianceProfile: this vendor is an OSS tooling dependency and does
+  # not process personal data. No Subprocessor will be generated.

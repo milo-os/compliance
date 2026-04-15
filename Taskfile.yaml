@@ -1,0 +1,52 @@
+version: '3'
+
+tasks:
+  generate:
+    desc: Run code generation (deep copy, CRD manifests, RBAC)
+    cmds:
+      - make manifests generate
+
+  build:
+    desc: Build the manager binary
+    cmds:
+      - make build
+
+  test:
+    desc: Run unit tests
+    cmds:
+      - make test
+
+  fmt:
+    desc: Format Go code
+    cmds:
+      - go fmt ./...
+
+  vet:
+    desc: Run go vet
+    cmds:
+      - go vet ./...
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run ./...
+
+  install-crds:
+    desc: Install CRDs into the cluster pointed to by ~/.kube/config
+    cmds:
+      - make install
+
+  run:
+    desc: Run the controller locally against the configured cluster
+    cmds:
+      - make run
+
+  docker-build:
+    desc: Build the controller Docker image
+    cmds:
+      - make docker-build
+
+  docker-push:
+    desc: Push the controller Docker image
+    cmds:
+      - make docker-push

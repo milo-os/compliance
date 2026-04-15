@@ -1,0 +1,30 @@
+apiVersion: compliance.datumapis.com/v1alpha1
+kind: Vendor
+metadata:
+  name: google-cloud
+spec:
+  displayName: Google Cloud
+  legalEntity: Google LLC
+  countryOfIncorporation: US
+  website: https://cloud.google.com
+  complianceProfile:
+    purpose: >-
+      Provides cloud infrastructure (compute, storage, networking) on which the
+      Datum Cloud platform runs.
+    dataCategories:
+      - identity
+      - telemetry
+      - access-logs
+      - audit-trail
+    dataSubjectTypes:
+      - organization-admin
+      - consumer
+      - platform-staff
+    processingRegions:
+      - US
+      - EU
+    transferMechanism: SCCs
+    riskTier: Critical
+    dpaReference: https://cloud.google.com/terms/data-processing-addendum
+    effectiveDate: "2024-01-01T00:00:00Z"
+    phase: Active
