@@ -1,0 +1,30 @@
+name: Publish Artifacts
+
+on:
+  push:
+  pull_request:
+  release:
+    types: ['published']
+
+jobs:
+  publish-container-image:
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+      attestations: write
+    uses: datum-cloud/actions/.github/workflows/publish-docker.yaml@v1.5.1
+    with:
+      image-name: compliance-service
+    secrets: inherit
+
+  publish-kustomize-bundles:
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+    uses: datum-cloud/actions/.github/workflows/publish-kustomize-bundle.yaml@v1.5.1
+    with:
+      bundle-name: ghcr.io/datum-cloud/compliance-kustomize
+      bundle-path: config
+    secrets: inherit
