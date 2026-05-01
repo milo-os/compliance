@@ -14,11 +14,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
-	complianceV1alpha1 "go.datum.net/compliance-service/api/v1alpha1"
+	complianceV1alpha1 "go.miloapis.com/compliance/api/v1alpha1"
 )
 
 const (
-	vendorFinalizer = "compliance.datumapis.com/vendor-protection"
+	vendorFinalizer = "compliance.miloapis.com/vendor-protection"
 )
 
 // VendorReconciler reconciles Vendor resources and derives corresponding
@@ -29,11 +29,11 @@ type VendorReconciler struct {
 	Log    logr.Logger
 }
 
-// +kubebuilder:rbac:groups=compliance.datumapis.com,resources=vendors,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=compliance.datumapis.com,resources=vendors/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=compliance.datumapis.com,resources=vendors/finalizers,verbs=update
-// +kubebuilder:rbac:groups=compliance.datumapis.com,resources=subprocessors,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=compliance.datumapis.com,resources=subprocessors/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=compliance.miloapis.com,resources=vendors,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=compliance.miloapis.com,resources=vendors/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=compliance.miloapis.com,resources=vendors/finalizers,verbs=update
+// +kubebuilder:rbac:groups=compliance.miloapis.com,resources=subprocessors,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=compliance.miloapis.com,resources=subprocessors/status,verbs=get;update;patch
 
 func (r *VendorReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("vendor", req.NamespacedName)

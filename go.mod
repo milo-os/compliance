@@ -1,4 +1,4 @@
-module go.datum.net/compliance-service
+module go.miloapis.com/compliance
 
 go 1.24.0
 
