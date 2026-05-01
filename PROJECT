@@ -2,28 +2,28 @@
 # This file is used to track the info used to scaffold your project
 # and allow the plugins properly work.
 # More info: https://book.kubebuilder.io/reference/project-config.html
-domain: datumapis.com
+domain: miloapis.com
 layout:
 - go.kubebuilder.io/v4
 projectName: compliance-service
-repo: go.datum.net/compliance-service
+repo: go.miloapis.com/compliance
 resources:
 - api:
     crdVersion: v1
     namespaced: false
   controller: true
-  domain: datumapis.com
+  domain: miloapis.com
   group: compliance
   kind: Vendor
-  path: go.datum.net/compliance-service/api/v1alpha1
+  path: go.miloapis.com/compliance/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
     namespaced: false
   controller: false
-  domain: datumapis.com
+  domain: miloapis.com
   group: compliance
   kind: Subprocessor
-  path: go.datum.net/compliance-service/api/v1alpha1
+  path: go.miloapis.com/compliance/api/v1alpha1
   version: v1alpha1
 version: "3"
