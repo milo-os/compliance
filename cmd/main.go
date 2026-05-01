@@ -18,8 +18,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
-	complianceV1alpha1 "go.datum.net/compliance-service/api/v1alpha1"
-	"go.datum.net/compliance-service/internal/controller"
+	complianceV1alpha1 "go.miloapis.com/compliance/api/v1alpha1"
+	"go.miloapis.com/compliance/internal/controller"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -60,7 +60,7 @@ func main() {
 		},
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "compliance.datumapis.com",
+		LeaderElectionID:       "compliance.miloapis.com",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
