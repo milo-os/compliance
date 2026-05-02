@@ -25,8 +25,16 @@ spec:
       - command:
         - /manager
         args:
-          - --leader-elect
-          - --health-probe-bind-address=:8081
+          - --metrics-bind-address=$(METRICS_BIND_ADDRESS)
+          - --health-probe-bind-address=$(HEALTH_PROBE_BIND_ADDRESS)
+          - --leader-elect=$(LEADER_ELECT)
+        env:
+          - name: METRICS_BIND_ADDRESS
+            value: ":8080"
+          - name: HEALTH_PROBE_BIND_ADDRESS
+            value: ":8081"
+          - name: LEADER_ELECT
+            value: "true"
         image: ghcr.io/milo-os/compliance:latest
         name: manager
         securityContext:
