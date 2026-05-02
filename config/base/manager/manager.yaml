@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compliance-controller-manager
+  labels:
+    control-plane: compliance
+    app.kubernetes.io/name: compliance
+    app.kubernetes.io/managed-by: kustomize
+spec:
+  selector:
+    matchLabels:
+      control-plane: compliance
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        control-plane: compliance
+        app.kubernetes.io/name: compliance
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - command:
+        - /manager
+        args:
+          - --metrics-bind-address=$(METRICS_BIND_ADDRESS)
+          - --health-probe-bind-address=$(HEALTH_PROBE_BIND_ADDRESS)
+          - --leader-elect=$(LEADER_ELECT)
+        env:
+          - name: METRICS_BIND_ADDRESS
+            value: ":8080"
+          - name: HEALTH_PROBE_BIND_ADDRESS
+            value: ":8081"
+          - name: LEADER_ELECT
+            value: "true"
+        image: ghcr.io/milo-os/compliance:latest
+        name: manager
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - "ALL"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+      serviceAccountName: compliance-controller-manager
+      terminationGracePeriodSeconds: 10

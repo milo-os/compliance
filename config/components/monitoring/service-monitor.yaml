@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: compliance-controller-manager
+spec:
+  endpoints:
+    - interval: 30s
+      port: metrics
+      scheme: http
+  selector:
+    matchLabels:
+      control-plane: compliance
+      app.kubernetes.io/name: compliance
