@@ -1,0 +1,238 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.2
+  name: subprocessors.compliance.miloapis.com
+spec:
+  group: compliance.miloapis.com
+  names:
+    categories:
+    - compliance
+    kind: Subprocessor
+    listKind: SubprocessorList
+    plural: subprocessors
+    singular: subprocessor
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.vendorRef
+      name: Vendor
+      type: string
+    - jsonPath: .status.disclosure.displayName
+      name: Display Name
+      type: string
+    - jsonPath: .status.disclosure.phase
+      name: Phase
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          Subprocessor is a controller-derived resource representing a publicly
+          disclosed subprocessor. It is generated automatically by the compliance
+          controller for every Vendor whose compliance profile is in the Active phase.
+          The status.disclosure field contains the public disclosure surface; the
+          source Vendor record is not exposed.
+
+          This resource is the compliance service's canonical source of truth for
+          the subprocessor list; the marketing site renders directly from it.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              SubprocessorSpec defines the desired state of a Subprocessor. The
+              compliance controller owns and manages all fields; this resource is
+              not intended to be created or edited directly by staff.
+            properties:
+              vendorRef:
+                description: |-
+                  VendorRef is the name of the Vendor resource from which this Subprocessor
+                  was derived.
+                type: string
+            required:
+            - vendorRef
+            type: object
+          status:
+            description: SubprocessorStatus defines the observed state of a Subprocessor.
+            properties:
+              conditions:
+                default:
+                - lastTransitionTime: "1970-01-01T00:00:00Z"
+                  message: Waiting for control plane to reconcile
+                  reason: Unknown
+                  status: Unknown
+                  type: Ready
+                description: |-
+                  Conditions represents the observations of a Subprocessor's current
+                  state. Known condition types: "Ready".
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              disclosure:
+                description: |-
+                  Disclosure is the public disclosure surface projected from the source
+                  Vendor's compliance profile. Populated by the compliance controller.
+                properties:
+                  countryOfIncorporation:
+                    description: |-
+                      CountryOfIncorporation is the ISO 3166-1 alpha-2 country code of the
+                      vendor's incorporating jurisdiction.
+                    type: string
+                  dataCategories:
+                    description: |-
+                      DataCategories enumerates the personal data categories processed by this
+                      vendor.
+                    items:
+                      description: |-
+                        DataCategory is an enumerated taxonomy of personal data categories processed
+                        by a vendor. This taxonomy is load-bearing: retention, residency, and ROPA
+                        capabilities key off these values, so additions are preferred over renames.
+                      enum:
+                      - identity
+                      - authentication
+                      - telemetry
+                      - billing
+                      - user-content
+                      - access-logs
+                      - audit-trail
+                      type: string
+                    type: array
+                  displayName:
+                    description: DisplayName is the vendor's public-facing name.
+                    type: string
+                  effectiveDate:
+                    description: EffectiveDate is when this subprocessor relationship
+                      became effective.
+                    format: date-time
+                    type: string
+                  legalEntity:
+                    description: LegalEntity is the registered legal name of the vendor
+                      entity.
+                    type: string
+                  phase:
+                    description: |-
+                      Phase is the current lifecycle state. Only Active subprocessors appear
+                      in the public feed at launch.
+                    enum:
+                    - Draft
+                    - Active
+                    type: string
+                  processingRegions:
+                    description: ProcessingRegions lists the regions where data is
+                      processed.
+                    items:
+                      type: string
+                    type: array
+                  purpose:
+                    description: Purpose describes what the vendor does with personal
+                      data.
+                    type: string
+                  transferMechanism:
+                    description: |-
+                      TransferMechanism is the legal basis for international data transfers to
+                      this vendor.
+                    enum:
+                    - SCCs
+                    - AdequacyDecision
+                    - BCRs
+                    type: string
+                  website:
+                    description: Website is the vendor's primary public website.
+                    type: string
+                required:
+                - countryOfIncorporation
+                - dataCategories
+                - displayName
+                - legalEntity
+                - phase
+                - purpose
+                - transferMechanism
+                type: object
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the most recent generation observed for this
+                  Subprocessor by the controller.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
