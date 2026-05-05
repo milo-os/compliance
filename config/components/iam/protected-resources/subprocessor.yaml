@@ -1,0 +1,19 @@
+---
+apiVersion: iam.miloapis.com/v1alpha1
+kind: ProtectedResource
+metadata:
+  name: compliance.miloapis.com-subprocessor
+spec:
+  serviceRef:
+    name: "compliance.miloapis.com"
+  kind: Subprocessor
+  plural: subprocessors
+  singular: subprocessor
+  permissions:
+    - list
+    - get
+    - create
+    - update
+    - delete
+    - patch
+    - watch

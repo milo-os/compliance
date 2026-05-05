@@ -1,0 +1,20 @@
+apiVersion: iam.miloapis.com/v1alpha1
+kind: Role
+metadata:
+  name: compliance.miloapis.com-admin
+  annotations:
+    kubernetes.io/display-name: Compliance Admin
+    kubernetes.io/description: "Full access to all compliance resources"
+spec:
+  launchStage: Alpha
+  inheritedRoles:
+    - name: compliance.miloapis.com-viewer
+  includedPermissions:
+    - compliance.miloapis.com/vendors.create
+    - compliance.miloapis.com/vendors.update
+    - compliance.miloapis.com/vendors.delete
+    - compliance.miloapis.com/vendors.patch
+    - compliance.miloapis.com/subprocessors.create
+    - compliance.miloapis.com/subprocessors.update
+    - compliance.miloapis.com/subprocessors.delete
+    - compliance.miloapis.com/subprocessors.patch
