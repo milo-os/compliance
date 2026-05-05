@@ -1,0 +1,16 @@
+apiVersion: iam.miloapis.com/v1alpha1
+kind: Role
+metadata:
+  name: compliance.miloapis.com-viewer
+  annotations:
+    kubernetes.io/display-name: Compliance Viewer
+    kubernetes.io/description: "View access to all compliance resources"
+spec:
+  launchStage: Alpha
+  includedPermissions:
+    - compliance.miloapis.com/vendors.list
+    - compliance.miloapis.com/vendors.get
+    - compliance.miloapis.com/vendors.watch
+    - compliance.miloapis.com/subprocessors.list
+    - compliance.miloapis.com/subprocessors.get
+    - compliance.miloapis.com/subprocessors.watch
