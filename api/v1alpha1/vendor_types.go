@@ -245,6 +245,7 @@ type VendorStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=vendors,scope=Cluster,categories=compliance,singular=vendor
+// +kubebuilder:metadata:annotations="discovery.miloapis.com/parent-contexts=Platform"
 // +kubebuilder:printcolumn:name="Display Name",type="string",JSONPath=".spec.displayName"
 // +kubebuilder:printcolumn:name="Legal Entity",type="string",JSONPath=".spec.legalEntity"
 // +kubebuilder:printcolumn:name="Country",type="string",JSONPath=".spec.countryOfIncorporation"

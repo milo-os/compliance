@@ -90,6 +90,7 @@ type SubprocessorStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=subprocessors,scope=Cluster,categories=compliance,singular=subprocessor
+// +kubebuilder:metadata:annotations="discovery.miloapis.com/parent-contexts=Platform"
 // +kubebuilder:printcolumn:name="Vendor",type="string",JSONPath=".spec.vendorRef"
 // +kubebuilder:printcolumn:name="Display Name",type="string",JSONPath=".status.disclosure.displayName"
 // +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.disclosure.phase"
