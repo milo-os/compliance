@@ -28,6 +28,8 @@ spec:
           - --metrics-bind-address=$(METRICS_BIND_ADDRESS)
           - --health-probe-bind-address=$(HEALTH_PROBE_BIND_ADDRESS)
           - --leader-elect=$(LEADER_ELECT)
+          - --milo-kubeconfig=$(MILO_KUBECONFIG)
+          - --leader-election-namespace=$(LEADER_ELECTION_NAMESPACE)
         env:
           - name: METRICS_BIND_ADDRESS
             value: ":8080"
@@ -35,6 +37,16 @@ spec:
             value: ":8081"
           - name: LEADER_ELECT
             value: "true"
+          # MILO_KUBECONFIG and LEADER_ELECTION_NAMESPACE default to empty so
+          # the manager falls back to the in-cluster client and
+          # controller-runtime's auto-detected lease namespace. Deployments
+          # that aggregate this controller into Milo override these via a
+          # strategic merge patch on env -- the args list above does not need
+          # to change.
+          - name: MILO_KUBECONFIG
+            value: ""
+          - name: LEADER_ELECTION_NAMESPACE
+            value: ""
         image: ghcr.io/milo-os/compliance:latest
         name: manager
         securityContext:
