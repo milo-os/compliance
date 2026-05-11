@@ -18,3 +18,7 @@ spec:
     - compliance.miloapis.com/subprocessors.update
     - compliance.miloapis.com/subprocessors.delete
     - compliance.miloapis.com/subprocessors.patch
+    - compliance.miloapis.com/vendorimports.create
+    - compliance.miloapis.com/vendorimports.update
+    - compliance.miloapis.com/vendorimports.delete
+    - compliance.miloapis.com/vendorimports.patch

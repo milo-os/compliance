@@ -1,0 +1,19 @@
+---
+apiVersion: iam.miloapis.com/v1alpha1
+kind: ProtectedResource
+metadata:
+  name: compliance.miloapis.com-vendorimport
+spec:
+  serviceRef:
+    name: "compliance.miloapis.com"
+  kind: VendorImport
+  plural: vendorimports
+  singular: vendorimport
+  permissions:
+    - list
+    - get
+    - create
+    - update
+    - delete
+    - patch
+    - watch

@@ -50,3 +50,37 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - compliance.miloapis.com
+  resources:
+  - vendorimports
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - compliance.miloapis.com
+  resources:
+  - vendorimports/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - compliance.miloapis.com
+  resources:
+  - vendorimports/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch

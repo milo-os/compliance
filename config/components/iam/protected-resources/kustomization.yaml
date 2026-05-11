@@ -8,3 +8,4 @@
 resources:
   - vendor.yaml
   - subprocessor.yaml
+  - vendorimport.yaml

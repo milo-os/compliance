@@ -14,3 +14,6 @@ spec:
     - compliance.miloapis.com/subprocessors.list
     - compliance.miloapis.com/subprocessors.get
     - compliance.miloapis.com/subprocessors.watch
+    - compliance.miloapis.com/vendorimports.list
+    - compliance.miloapis.com/vendorimports.get
+    - compliance.miloapis.com/vendorimports.watch

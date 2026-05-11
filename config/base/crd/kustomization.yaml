@@ -4,6 +4,7 @@
 resources:
 - bases/compliance.miloapis.com_vendors.yaml
 - bases/compliance.miloapis.com_subprocessors.yaml
+- bases/compliance.miloapis.com_vendorimports.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:

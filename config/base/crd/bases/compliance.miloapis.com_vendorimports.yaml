@@ -1,0 +1,226 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.2
+    discovery.miloapis.com/parent-contexts: Platform
+  name: vendorimports.compliance.miloapis.com
+spec:
+  group: compliance.miloapis.com
+  names:
+    categories:
+    - compliance
+    kind: VendorImport
+    listKind: VendorImportList
+    plural: vendorimports
+    singular: vendorimport
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.source
+      name: Source
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.lastSyncTime
+      name: Last Sync
+      type: date
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          VendorImport is a staff-managed request to populate the Vendor catalogue
+          from an external source (today: Ramp). The reconciler pulls vendors from
+          the configured source on a schedule and creates Draft Vendor records,
+          leaving the operator to fill in the compliance-profile fields the source
+          doesn't carry. Existing Draft Vendors with a matching annotation are
+          refreshed in place; Active Vendors are never overwritten.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              VendorImportSpec defines the desired state of a VendorImport. The
+              reconciler watches these and, for each, calls out to the configured
+              third-party source to create or refresh Draft Vendor records.
+            properties:
+              ramp:
+                description: |-
+                  Ramp configures the Ramp adapter when Source is "ramp". Required for
+                  that source; ignored otherwise.
+                properties:
+                  credentialsRef:
+                    description: |-
+                      CredentialsRef points at a Secret holding Ramp's OAuth2
+                      client_credentials. The Secret must expose at least `client_id` and
+                      `client_secret` data keys. The reconciler reads it on every reconcile
+                      so rotated secrets take effect on the next requeue.
+                    properties:
+                      name:
+                        description: name is unique within a namespace to reference
+                          a secret resource.
+                        type: string
+                      namespace:
+                        description: namespace defines the space within which the
+                          secret name must be unique.
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  endpoint:
+                    description: |-
+                      Endpoint overrides the Ramp API base URL. Defaults to
+                      https://api.ramp.com. Useful for staging/sandbox environments and for
+                      tests that point at a mock server.
+                    type: string
+                  tokenURL:
+                    description: |-
+                      TokenURL overrides the Ramp OAuth2 token endpoint. Defaults to
+                      https://api.ramp.com/v1/public/customer/token (the Ramp production
+                      token endpoint). Useful for sandbox.
+                    type: string
+                required:
+                - credentialsRef
+                type: object
+              resyncInterval:
+                description: |-
+                  ResyncInterval controls how often the controller re-runs the import in
+                  addition to on-demand triggers (re-applies, edits). The default is 24h.
+                  Setting this to zero disables periodic re-sync; the import then only
+                  fires when the CR is created or otherwise reconciled.
+                format: duration
+                type: string
+              source:
+                description: |-
+                  Source identifies which adapter fulfils this import. Today only
+                  "ramp" is supported; additional adapters can be added without breaking
+                  existing imports.
+                enum:
+                - ramp
+                type: string
+            required:
+            - source
+            type: object
+          status:
+            description: VendorImportStatus defines the observed state of a VendorImport.
+            properties:
+              conditions:
+                default:
+                - lastTransitionTime: "1970-01-01T00:00:00Z"
+                  message: Waiting for control plane to reconcile
+                  reason: Unknown
+                  status: Unknown
+                  type: Ready
+                description: |-
+                  Conditions represents the observations of a VendorImport's current
+                  state. Known condition types: "Ready", "ImportComplete".
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              importedVendorRefs:
+                description: |-
+                  ImportedVendorRefs lists the Vendor resource names this import has
+                  created or updated. The list is replaced on every sync — it represents
+                  the vendors the source returned in the last pass, not a cumulative
+                  history.
+                items:
+                  type: string
+                type: array
+              lastSyncTime:
+                description: |-
+                  LastSyncTime is the timestamp of the most recent successful import
+                  pass.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the most recent generation observed for this
+                  VendorImport by the controller.
+                format: int64
+                type: integer
+              skippedActiveRefs:
+                description: |-
+                  SkippedActiveRefs lists the Vendor resource names the import would
+                  have updated had they been in Draft, but were left untouched because
+                  their compliance profile is already Active. Surfacing these lets
+                  operators decide whether to re-draft an out-of-date subprocessor.
+                items:
+                  type: string
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
